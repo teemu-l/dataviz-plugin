@@ -15,5 +15,5 @@ Each byte is given a color based on where it is read (instruction pointer). So i
 
 # Requirements
 
-[Python 3.8.1](https://python.org/download)
-[Execution Trace Viewer](https://github.com/teemu-l/execution-trace-viewer)
+- [Python 3.8.1](https://python.org/download)
+- [Execution Trace Viewer](https://github.com/teemu-l/execution-trace-viewer)
