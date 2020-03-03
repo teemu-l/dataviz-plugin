@@ -1,0 +1,9 @@
+[Core]
+Name = Data visualization plugin
+Module = data_viz_plugin
+
+[Documentation]
+Author = Teemu
+Version = 0.1
+Website = https://github.com/teemu-l/execution-trace-viewer
+Description = Data visualizer plugin
