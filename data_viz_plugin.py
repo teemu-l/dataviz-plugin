@@ -69,6 +69,7 @@ class HexPlugin(IPlugin):
             {"label": "Memory address", "data": "0x0"},
             {"label": "Size", "data": 2000},
             {"label": "Source trace", "data": ["Full trace", "Filtered trace"]},
+            {"label": "Memory operations", "data": ["Reads", "Writes"]},
             {"label": "Byte order", "data": ["Little endian", "Big endian"]},
         ]
         options = api.get_values_from_user("Data visualizer", input_dlg_data)
@@ -76,7 +77,7 @@ class HexPlugin(IPlugin):
         if not options:
             return
 
-        self.address, self.mem_size, trace_id, byte_order = options
+        self.address, self.mem_size, trace_id, mem_op, byte_order = options
         self.address = self.str_to_int(self.address)
 
         if trace_id == 0:
@@ -88,6 +89,11 @@ class HexPlugin(IPlugin):
             print("Plugin error: empty trace.")
             return
 
+        if mem_op == 0:
+            self.mem_op = "READ"
+        else:
+            self.mem_op = "WRITE"
+
         if byte_order == 0:
             self.byteorder = "little"
         else:
@@ -95,7 +101,6 @@ class HexPlugin(IPlugin):
 
         self.color_counter = 0
         self.address_colors = {}
-        self.mem_read_only = True
         self.show_first_mem_access = True
 
         data = self.prepare_data(trace)
@@ -111,7 +116,7 @@ class HexPlugin(IPlugin):
         for row_index, t in enumerate(trace):
             for mem in t["mem"]:
 
-                if self.mem_read_only and mem["access"] != "READ":
+                if mem["access"] != self.mem_op:
                     continue
 
                 disasm = t["disasm"].lower()
