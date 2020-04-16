@@ -1,8 +1,8 @@
-# Data vizualizer plugin
+# Data visualizer plugin
 
 This plugin visualizes data read (or written) from memory. It could be useful when reverse engineering complex file format or protocol.
 
-Each byte is given a color based on where it is read (instruction pointer). So if 2 bytes have same color, they were read on same location and are probably same type of data. You can click the bytes to follow them in trace and see what are they being used for.
+Each byte is given a color based on where it is read (instruction pointer). So if 2 bytes have same color, they were read on same location and are probably same type of data. You can click the bytes to follow them in trace and see what are they used for.
 
 ![Sample data](img/scr1.jpg "Sample data")
 
