@@ -64,25 +64,37 @@ class HexPlugin(IPlugin):
     def execute(self, api: Api):
 
         self.api = api
-        trace = api.get_visible_trace()
+
+        input_dlg_data = [
+            {"label": "Memory address", "data": "0x0"},
+            {"label": "Size", "data": 2000},
+            {"label": "Source trace", "data": ["Full trace", "Filtered trace"]},
+            {"label": "Byte order", "data": ["Little endian", "Big endian"]},
+        ]
+        options = api.get_values_from_user("Data visualizer", input_dlg_data)
+
+        if not options:
+            return
+
+        self.address, self.mem_size, trace_id, byte_order = options
+        self.address = self.str_to_int(self.address)
+
+        if trace_id == 0:
+            trace = api.get_full_trace()
+        else:
+            trace = api.get_filtered_trace()
 
         if not trace:
             print("Plugin error: empty trace.")
             return
 
-        addr_and_size = api.get_values_from_user(
-            "Data vizualization", "Give a memory address and size, separated by comma:",
-        )
-
-        if not addr_and_size or len(addr_and_size) != 2:
-            print("Error. Wrong values given")
-            return
-
-        self.address, self.mem_size = addr_and_size
+        if byte_order == 0:
+            self.byteorder = "little"
+        else:
+            self.byteorder = "big"
 
         self.color_counter = 0
         self.address_colors = {}
-        self.byteorder = "little"
         self.mem_read_only = True
         self.show_first_mem_access = True
 
@@ -193,7 +205,7 @@ class HexPlugin(IPlugin):
         self.window.statusBar.showMessage(str(item))
 
     def mouse_left_clicked(self, item: dict):
-        self.api.go_to_trace_row(item["row_id"])
+        self.api.go_to_row_in_current_trace(item["row_id"])
 
     def mouse_right_clicked(self, item: dict):
         self.menu = QMenu(self.window)
@@ -220,3 +232,13 @@ class HexPlugin(IPlugin):
 
     def get_random_color(self):
         return int(random.random() * 0xFFFFFF)
+
+    def str_to_int(self, s: str):
+        result = 0
+        if s:
+            s = s.strip()
+            if "0x" in s:
+                result = int(s, 16)
+            else:
+                result = int(s)
+        return result

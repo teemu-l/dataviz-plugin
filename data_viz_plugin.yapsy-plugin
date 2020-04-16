@@ -1,5 +1,5 @@
 [Core]
-Name = Data visualization plugin
+Name = Data visualizer plugin
 Module = data_viz_plugin
 
 [Documentation]
